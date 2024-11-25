@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { NewToDoForm } from "./components/new-todo-form";
-import { title } from "process";
 
 type ToDoItem = {
   title: string;
@@ -18,6 +17,7 @@ export default function Home() {
       <ul className="space-y-2">
         {todos.map(({ title, description, completed }, index) => (
           <ToDoItem
+            key={index}
             title={title}
             description={description}
             completed={completed}
@@ -64,7 +64,7 @@ function ToDoItem({
   onRemove: () => void;
 }) {
   return (
-    <li className="flex gap-2 border rounded p-2">
+    <li className=" w-full items-center flex gap-2 border rounded p-2">
       <input
         type="checkbox"
         checked={completed}
@@ -72,9 +72,9 @@ function ToDoItem({
       />
       <div>
         <p className="font-semibold">{title}</p>
-        <p className="tex-sm text-grey-600">{description}</p>
+        <p className="text-sm text-grey-600">{description}</p>
       </div>
-      <div>
+      <div className="ml-auto">
         <button
           type="button"
           className="text-red-500"
