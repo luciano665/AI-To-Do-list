@@ -1,68 +1,31 @@
 "use client";
+import { SignInButton, UserButton } from "@clerk/nextjs";
 import { NewToDoForm } from "./components/new-todo-form";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import { Id } from "../../convex/_generated/dataModel";
+import { ToDoList } from "./components/to-do-list";
+import { Authenticated, Unauthenticated, AuthLoading } from "convex/react";
 
 export default function Home() {
-  //const [todos, setTodos] = useState<ToDoItem[]>([]); // -> ToDo item type of type Array and set that to empty array
-
-  //The use query functions will be updated automatically whenever we make any changes
-  const todos = useQuery(api.functions.listTodos);
-
   return (
     <div className="max-w-screen-md mx-auto p-4 space-y-4">
-      <h1 className="text-xl font-bold">To-Do List</h1>
-      <ul className="space-y-2">
-        {todos?.map(({ _id, title, description, completed }, index) => (
-          <ToDoItem
-            key={index}
-            id={_id}
-            title={title}
-            description={description}
-            completed={completed}
-          />
-        ))}
-      </ul>
-      <NewToDoForm />
+      <Authenticated>
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">To-Do List</h1>
+          <UserButton />
+        </div>
+        <ToDoList />
+        <NewToDoForm />
+      </Authenticated>
+      <Unauthenticated>
+        <p className="text-gray-500">Please sign in to continue</p>
+        <SignInButton>
+          <button className="p-1 bg-blue-300 text-white rounded">
+            Sign in
+          </button>
+        </SignInButton>
+      </Unauthenticated>
+      <AuthLoading>
+        <p>Loading....</p>
+      </AuthLoading>
     </div>
-  );
-}
-
-function ToDoItem({
-  id,
-  title,
-  description,
-  completed,
-}: {
-  id: Id<"todos">;
-  title: string;
-  description: string;
-  completed: boolean;
-}) {
-  const updateTodo = useMutation(api.functions.updateTodo);
-  const deleteTodo = useMutation(api.functions.deleteTodo);
-
-  return (
-    <li className=" w-full items-center flex gap-2 border rounded p-2">
-      <input
-        type="checkbox"
-        checked={completed}
-        onChange={(e) => updateTodo({ id, completed: e.target.checked })}
-      />
-      <div>
-        <p className="font-semibold">{title}</p>
-        <p className="text-sm text-grey-600">{description}</p>
-      </div>
-      <div className="ml-auto">
-        <button
-          type="button"
-          className="text-red-500"
-          onClick={() => deleteTodo({ id })}
-        >
-          Remove
-        </button>
-      </div>
-    </li>
   );
 }
