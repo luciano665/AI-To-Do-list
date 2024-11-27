@@ -1,7 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-//Define bascially just tables
+//Define basically just table format of how we will store out data
 export default defineSchema({
   todos: defineTable({
     title: v.string(),
