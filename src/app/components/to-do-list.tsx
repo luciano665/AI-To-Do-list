@@ -47,7 +47,7 @@ function ToDoItem({
       <div className="ml-auto">
         <button
           type="button"
-          className="text-red-500"
+          className="text-red-600"
           onClick={() => deleteTodo({ id })}
         >
           Remove
